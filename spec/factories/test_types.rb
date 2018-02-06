@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :todo do
+  factory :test_type do
     name { Faker::Lorem.word }
   end
 end

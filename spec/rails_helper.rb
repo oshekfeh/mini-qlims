@@ -35,6 +35,9 @@ end
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.maintain_test_schema!
 
+#Load support folder
+Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -47,7 +50,8 @@ RSpec.configure do |config|
   # add `FactoryGirl` methods
   config.include FactoryGirl::Syntax::Methods
 
-
+  config.include RequestSpecHelper, type: :request
+  
   # start by truncating all the tables but then use the faster transaction strategy the rest of the time.
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
@@ -60,7 +64,7 @@ RSpec.configure do |config|
       example.run
     end
   end
-  
+
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
   # `post` in specs under `spec/controllers`.
