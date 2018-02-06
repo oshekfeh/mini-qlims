@@ -5,4 +5,5 @@ RSpec.describe Sample, type: :model do
   it { should belong_to(:request)}
   it { should belong_to(:sample_type) }
   it { should belong_to(:test_type) }
+  it { should belong_to(:unit) }
 end
