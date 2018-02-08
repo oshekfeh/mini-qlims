@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe 'SampleTypes API', type: :request do
   # initialize test data
   let!(:sample_types) { create_list(:sample_type, 10) }
-  # let(:test_typez) { FactoryGirl.create(:test_type_sample_type, sample_types.first) }
   let(:sample_type_id) { sample_types.first.id }
   let(:test_type) { create_list(:test_type, 5) }
 
@@ -77,7 +76,6 @@ RSpec.describe 'SampleTypes API', type: :request do
     end
 
     context 'when the request is valid and assigned to test_types' do
-      # before { post '/sample_types', params: {:name => 'Omar Shekfeh', :test_types => [{:id => test_type[0].id, :name => test_type[0].name}, {:id => test_type[1].id, :name => test_type[1].name}]}, as: :json }
       before { post '/sample_types', params: attributes_with_assignment }
 
       it 'creates a sample_type' do
@@ -104,12 +102,29 @@ RSpec.describe 'SampleTypes API', type: :request do
   # Test suite for PUT /todos/:id
   describe 'PUT /sample_types/:id' do
     let(:valid_attributes) { { name: 'Shopping' } }
+    let(:attributes_with_assignment) { { name: 'Omar Shekfeh', test_types: [{:id => test_type[0].id, :name => test_type[0].name}, {:id => test_type[1].id, :name => test_type[1].name}] } }
 
     context 'when the record exists' do
       before { put "/sample_types/#{sample_type_id}", params: valid_attributes }
 
       it 'updates the record' do
         expect(response.body).to be_empty
+      end
+
+      it 'returns status code 204' do
+        expect(response).to have_http_status(204)
+      end
+    end
+
+    context 'When the record exists with association' do
+      before do
+        sample_types.first.test_types << test_type
+        put "/sample_types/#{sample_type_id}", params: attributes_with_assignment
+      end
+
+      it 'updates the record' do
+        expect(response.body).to be_empty
+        expect(sample_types.first.test_types.size).to eq(2)
       end
 
       it 'returns status code 204' do

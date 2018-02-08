@@ -9,15 +9,10 @@ class SampleTypesController < ApplicationController
 
   # POST /todos
   def create
-    # puts '-----'
-    # puts sample_type_params
-
     permitted_params = sample_type_params
     #pop out test type from the params
     @test_types = permitted_params.delete(:test_types)
 
-    # puts '---AFTER DELETION ----'
-    # puts permitted_params
     #create sample type object
     @sample_type = SampleType.new(permitted_params)
 
@@ -42,7 +37,16 @@ class SampleTypesController < ApplicationController
 
   # PUT /todos/:id
   def update
-    @sample_type.update(sample_type_params)
+    permitted_params = sample_type_params
+
+    @test_types = permitted_params.delete(:test_types)
+
+    if @test_types
+      @test_types = @test_types.map{|t| t[:id]}
+      @test_types = TestType.find(@test_types)
+      permitted_params[:test_types] = @test_types
+    end
+    @sample_type.update(permitted_params)
     head :no_content
   end
 
