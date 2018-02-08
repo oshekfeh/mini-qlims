@@ -3,7 +3,9 @@ require 'rails_helper'
 RSpec.describe 'SampleTypes API', type: :request do
   # initialize test data
   let!(:sample_types) { create_list(:sample_type, 10) }
+  # let(:test_typez) { FactoryGirl.create(:test_type_sample_type, sample_types.first) }
   let(:sample_type_id) { sample_types.first.id }
+  let(:test_type) { create_list(:test_type, 5) }
 
   # Test suite for GET /todos
   describe 'GET /sample_types' do
@@ -23,12 +25,19 @@ RSpec.describe 'SampleTypes API', type: :request do
 
   # Test suite for GET /todos/:id
   describe 'GET /sample_types/:id' do
+    before do
+      sample_types.first.test_types << test_type
+    end
     before { get "/sample_types/#{sample_type_id}" }
 
     context 'when the record exists' do
       it 'returns the sample_type' do
         expect(json).not_to be_empty
         expect(json['id']).to eq(sample_type_id)
+      end
+
+      it 'returns the assigned test_types' do
+        expect(json['test_types'].size).to eq(5)
       end
 
       it 'returns status code 200' do
@@ -53,6 +62,7 @@ RSpec.describe 'SampleTypes API', type: :request do
   describe 'POST /sample_types' do
     # valid payload
     let(:valid_attributes) { { name: 'Learn Elm'} }
+    let(:attributes_with_assignment) { { name: 'Omar Shekfeh', test_types: [{:id => test_type[0].id, :name => test_type[0].name}, {:id => test_type[1].id, :name => test_type[1].name}] } }
 
     context 'when the request is valid' do
       before { post '/sample_types', params: valid_attributes }
@@ -63,6 +73,16 @@ RSpec.describe 'SampleTypes API', type: :request do
 
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
+      end
+    end
+
+    context 'when the request is valid and assigned to test_types' do
+      # before { post '/sample_types', params: {:name => 'Omar Shekfeh', :test_types => [{:id => test_type[0].id, :name => test_type[0].name}, {:id => test_type[1].id, :name => test_type[1].name}]}, as: :json }
+      before { post '/sample_types', params: attributes_with_assignment }
+
+      it 'creates a sample_type' do
+        expect(json['name']).to eq('Omar Shekfeh')
+        expect(json['test_types'].size).to eq(2)
       end
     end
 
