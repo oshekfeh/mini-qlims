@@ -1,4 +1,4 @@
-class Request < ApplicationRecord
+class SampleRequest < ApplicationRecord
   #Association
   has_many :samples, dependent: :destroy
 

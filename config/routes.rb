@@ -3,5 +3,5 @@ Rails.application.routes.draw do
   resources :sample_types, :except => [:destroy]
   resources :test_types, :except => [:destroy]
   resources :units, :except => [:destroy]
-  resources :requests, :except => [:destroy]
+  resources :sample_requests, :except => [:destroy]
 end
