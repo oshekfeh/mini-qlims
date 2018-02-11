@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Request, type: :model do
+RSpec.describe SampleRequest, type: :model do
   #Association test
   it { should have_many(:samples).dependent(:destroy)}
 

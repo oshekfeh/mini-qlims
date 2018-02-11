@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180211070954) do
+ActiveRecord::Schema.define(version: 20180211073911) do
 
   create_table "sample_requests", force: :cascade do |t|
     t.string "code"
@@ -34,13 +34,13 @@ ActiveRecord::Schema.define(version: 20180211070954) do
   create_table "samples", force: :cascade do |t|
     t.string "name"
     t.integer "qty"
-    t.integer "request_id"
+    t.integer "sample_request_id"
     t.integer "test_type_id"
     t.integer "sample_type_id"
     t.integer "unit_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["request_id"], name: "index_samples_on_request_id"
+    t.index ["sample_request_id"], name: "index_samples_on_sample_request_id"
     t.index ["sample_type_id"], name: "index_samples_on_sample_type_id"
     t.index ["test_type_id"], name: "index_samples_on_test_type_id"
     t.index ["unit_id"], name: "index_samples_on_unit_id"
