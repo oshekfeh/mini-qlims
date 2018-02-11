@@ -4,7 +4,7 @@ class SampleRequestsController < ApplicationController
   # GET /todos
   def index
     @sample_requests = SampleRequest.all
-    json_response(@sample_requests)
+    json_repsonse_include(@sample_requests, :samples, :ok)
   end
 
   # POST /todos
@@ -15,7 +15,7 @@ class SampleRequestsController < ApplicationController
 
   # GET /todos/:id
   def show
-    json_response(@sample_request)
+    json_repsonse_include(@sample_request, :samples, :ok)
   end
 
   # PUT /todos/:id

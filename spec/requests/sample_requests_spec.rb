@@ -4,6 +4,10 @@ RSpec.describe 'SampleRequests API', type: :request do
   # initialize test data
   let!(:sample_requests) { create_list(:sample_request, 10) }
   let(:sample_request_id) { sample_requests.first.id }
+  let!(:samples) { create_list(:sample, 5, sample_request_id: sample_requests.first.id) }
+  let!(:test_type) { create(:test_type) }
+  let!(:sample_type) { create(:sample_type) }
+  let!(:unit) { create(:unit) }
 
   # Test suite for GET /todos
   describe 'GET /sample_requests' do
@@ -18,6 +22,24 @@ RSpec.describe 'SampleRequests API', type: :request do
 
     it 'returns status code 200' do
       expect(response).to have_http_status(200)
+    end
+
+    before do
+      # samples.first.test_type << test_type
+      # samples.first.sample_type << sample_type
+      # samples.first.unit << unit
+      sample_requests.first.samples << samples
+    end
+
+    it 'Check that sample_requests retrieve sample' do
+      expect(json[0]['samples'].size).to eq(5)
+      expect(json[0]['samples'][0]['sample_type_id']).should_not be_nil
+      expect(json[0]['samples'][0]['test_type_id']).should_not be_nil
+      expect(json[0]['samples'][0]['unit_id']).should_not be_nil
+    end
+
+    it 'Check that sample_requests send empty sample array is there is no assiociation' do
+      expect(json[1]['samples'].size).to eq(0)
     end
   end
 
